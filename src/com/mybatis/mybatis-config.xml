@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <typeAliases>
+        <typeAlias alias="Auser" type="com.po.Auser"/>
+        <typeAlias alias="Buser" type="com.po.Buser"/>
+        <typeAlias alias="Email" type="com.po.Email"/>
+        <typeAlias alias="Rsrecordtable" type="com.po.Rsrecordtable"/>
+     </typeAliases>
+	 <mappers>
+        <mapper resource="com/mybatis/admin/AdminMapper.xml"/>
+        <mapper resource="com/mybatis/before/UserMapper.xml"/>
+        <mapper resource="com/mybatis/before/EmailMapper.xml"/>
+ 	</mappers>
+</configuration>
+

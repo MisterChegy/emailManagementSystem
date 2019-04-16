@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.EmailDao">
+	<!-- 自动递增主键的回填 -->
+	<insert id="writeEmail" parameterType="Email" keyProperty="id" useGeneratedKeys="true">
+		insert into emailtable (title, content, attachfilename, attachfile) 
+		values (#{title}, #{content}, #{attachfilename}, #{attachfile})
+	</insert>
+	<!-- 添加邮件记录 -->
+	<insert id="writeEmailRecord" parameterType="Rsrecordtable" >
+		insert into rsrecordtable (id_r, email_r, id_s, email_s, id_email, sendtime, isopen) 
+		values (#{id_r}, #{email_r}, #{id_s}, #{email_s}, #{id_email}, now(), 0)
+	</insert>
+	<!-- 查询所有用户邮箱供写信时选择 -->
+	<select id="selectBuserEmail" resultType="Buser">
+		select * from busertable order by bemail
+	</select>
+	
+	<!-- 查询所有邮件 -->
+	<select id="selectAllEmail" resultType="map">
+		SELECT * from rsrecordtable rt, emailtable et where  et.id = rt.id_email and rt.isdelete = 0 group by rt.id_email  order by rt.id desc;
+	</select>
+	
+	<!-- 收信 -->
+	<select id="recieve" parameterType="Integer" resultType="map">
+		SELECT * from rsrecordtable rt, emailtable et where  rt.id_r = #{id} and et.id = rt.id_email and rt.isdelete = 0  order by rt.id desc;
+	</select>
+	<!-- 已发送 -->
+	<select id="send" parameterType="Integer" resultType="map">
+		SELECT * from rsrecordtable rt, emailtable et where  rt.id_s = #{id} and et.id = rt.id_email and rt.isdelete = 0  order by rt.id desc;
+	</select>
+	<!-- 查看信件详情 -->
+	<select id="detail" parameterType="Integer" resultType="map">
+		select * from rsrecordtable rt, emailtable et where rt.id = #{id} and rt.id_email = et.id
+	</select>
+	<!-- 查看信件详情，更新打开标记 -->
+	<update id="updateOpen" parameterType="Integer">
+		update rsrecordtable set isopen=1 where id = #{id}
+	</update>
+	<!-- 删除一个邮件 -->
+	<update id="deleteOne" parameterType="Integer">
+		update rsrecordtable set isdelete=1 where id = #{id}
+	</update>
+	<!-- 后台删除邮件 -->
+	<update id="delete" parameterType="Integer">
+		update rsrecordtable set isdelete=1 where id_email = #{id}
+	</update>
+	<update id="lock" parameterType="Integer">
+		update busertable set islock=1 where id = #{id}
+	</update>
+	<update id="unLock" parameterType="Integer">
+		update busertable set islock=0 where id = #{id}
+	</update>
+</mapper>
